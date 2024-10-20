@@ -34,13 +34,14 @@ import androidx.navigation.navArgument
 import com.puyodev.lab10.data.SerieApiService
 import com.puyodev.lab10.screens.ContenidoSerieEditar
 import com.puyodev.lab10.screens.ContenidoSerieEliminar
+import com.puyodev.lab10.screens.ContenidoSerieInsertar
 import com.puyodev.lab10.screens.ContenidoSeriesListado
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun SeriesApp() {
-    val urlBase = "http://192.168.43.69:8000/" // o tu IP si usarás un dispositivo externo
+    val urlBase = "http://192.168.1.105:8000/" // o tu IP si usarás un dispositivo externo
     val retrofit = Retrofit.Builder().baseUrl(urlBase)
         .addConverterFactory(GsonConverterFactory.create()).build()
     val servicio = retrofit.create(SerieApiService::class.java)
@@ -63,7 +64,7 @@ fun BotonFAB(navController: NavHostController, servicio: SerieApiService) {
         FloatingActionButton(
             containerColor = Color.Magenta,
             contentColor = Color.White,
-            onClick = { navController.navigate("serieNuevo") }
+            onClick = { navController.navigate("serieInsertar") }
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
@@ -139,6 +140,9 @@ fun Contenido(
                 navArgument("id") { type = NavType.IntType} )
             ) {
                 ContenidoSerieEliminar(navController, servicio, it.arguments!!.getInt("id"))
+            }
+            composable("serieInsertar") {
+                ContenidoSerieInsertar(navController, servicio)
             }
         }
     }

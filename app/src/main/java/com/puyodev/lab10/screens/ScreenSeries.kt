@@ -216,3 +216,69 @@ fun ContenidoSerieEliminar(navController: NavHostController, servicio: SerieApiS
         }
     }
 }
+
+@Composable
+fun ContenidoSerieInsertar(navController: NavHostController, servicio: SerieApiService) {
+    var name by remember { mutableStateOf<String?>("") }
+    var release_date by remember { mutableStateOf<String?>("") }
+    var rating by remember { mutableStateOf<String?>("") }
+    var category by remember { mutableStateOf<String?>("") }
+    var grabar by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        TextField(
+            value = name ?: "",
+            onValueChange = { name = it },
+            label = { Text("Name: ") },
+            singleLine = true
+        )
+        TextField(
+            value = release_date ?: "",
+            onValueChange = { release_date = it },
+            label = { Text("Release Date:") },
+            singleLine = true
+        )
+        TextField(
+            value = rating ?: "",
+            onValueChange = { rating = it },
+            label = { Text("Rating:") },
+            singleLine = true
+        )
+        TextField(
+            value = category ?: "",
+            onValueChange = { category = it },
+            label = { Text("Category:") },
+            singleLine = true
+        )
+        Button(
+            onClick = {
+                grabar = true
+            },
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Grabar", fontSize = 16.sp)
+        }
+    }
+
+    if (grabar) {
+        val nuevaSerie = SerieModel(
+            id = 0,  // El ID puede ser autogenerado por el servidor, así que lo dejamos en 0.
+            name = name ?: "",
+            release_date = release_date ?: "",
+            rating = rating?.toInt() ?: 0,
+            category = category ?: ""
+        )
+
+        LaunchedEffect(Unit) {
+            servicio.insertSerie(nuevaSerie)
+            navController.navigate("series") // Navegar de vuelta al listado
+        }
+        grabar = false
+        navController.navigate("series")
+    }
+}
+
